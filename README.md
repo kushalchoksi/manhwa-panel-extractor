@@ -2,6 +2,9 @@
 
 Scrolling through manhwa pages on your phone is a pain, there's just too much white space. Plus I sometimes like to make memes from just the image. 
 
+![image](https://github.com/user-attachments/assets/7d1e0004-89f8-45d2-8604-7da116c3d630)
+
+
 ## What It Does
 - **Extracts Panels**: Slices manhwa pages into individual panels.
 - **Refines Them**: Removes speech bubbles using HSV magic.
