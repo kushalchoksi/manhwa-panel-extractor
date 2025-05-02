@@ -196,49 +196,71 @@ class PanelColorExtractor:
         return self.refined_panel
     
     def visualize(self):
-        """Visualize the extraction process."""
+        """Visualize the extraction process in a 3x3 grid."""
         if self.original_panel is None:
             print("No panel to visualize.")
             return
-        
-        # Prepare visualization stages
+
+        # Prepare figure with a 3x3 grid
+        fig, axes = plt.subplots(3, 3, figsize=(12, 12))
+
+        # 1. First row: Original Panel, HSV Image, Color Mask
         stages = [
-            ("Original Panel", self.original_panel),
-            ("HSV Image", self.hsv_image),
-            ("Color Mask", self.color_mask)
+            ("Original Panel", self.original_panel, cv2.COLOR_BGR2RGB),
+            ("HSV Image", self.hsv_image, cv2.COLOR_HSV2RGB),
+            ("Color Mask", self.color_mask, None)  # Grayscale
         ]
-        
-        # Add content boundary visualization
-        if self.content_box is not None:
-            debug_img = self.original_panel.copy()
-            x, y, w, h = self.content_box
-            cv2.rectangle(debug_img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            stages.append(("Content Boundary", debug_img))
-        
-        # Add refined panel
-        if self.refined_panel is not None:
-            stages.append(("Refined Panel", self.refined_panel))
-        
-        # Create visualization
-        fig, axes = plt.subplots(1, len(stages), figsize=(5*len(stages), 5))
-        
-        for i, (title, img) in enumerate(stages):
-            ax = axes[i]
-            
+
+        for i, (title, img, color_conversion) in enumerate(stages):
+            ax = axes[0, i]
             if img is None:
                 ax.text(0.5, 0.5, "Not Available", ha="center", va="center")
             elif len(img.shape) == 2:  # Grayscale
                 ax.imshow(img, cmap="gray")
             else:  # Color
-                # Special handling for HSV image
-                if title == "HSV Image":
-                    ax.imshow(cv2.cvtColor(img, cv2.COLOR_HSV2RGB))
-                else:
-                    ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            
+                ax.imshow(cv2.cvtColor(img, color_conversion) if color_conversion else img)
             ax.set_title(title)
             ax.axis("off")
-        
+
+        # 2. Second row: Individual HSV Channels
+        if self.hsv_image is not None:
+            h, s, v = cv2.split(self.hsv_image)
+            channels = [("Hue", h), ("Saturation", s), ("Value", v)]
+            for i, (title, channel) in enumerate(channels):
+                ax = axes[1, i]
+                ax.imshow(channel, cmap="gray")
+                ax.set_title(title)
+                ax.axis("off")
+
+        # 3. Third row: Significant Contours, Content Boundary, Refined Panel
+        if self.color_mask is not None:
+            ax = axes[2, 0]
+            debug_img = self.original_panel.copy()
+            contours, _ = cv2.findContours(self.color_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            img_area = self.original_panel.shape[0] * self.original_panel.shape[1]
+            min_area = img_area * self.min_content_area
+            significant_contours = [c for c in contours if cv2.contourArea(c) > min_area]
+            cv2.drawContours(debug_img, significant_contours, -1, (0, 255, 0), 2)
+            ax.imshow(cv2.cvtColor(debug_img, cv2.COLOR_BGR2RGB))
+            ax.set_title("Significant Contours")
+            ax.axis("off")
+
+        if self.content_box is not None:
+            ax = axes[2, 1]
+            debug_img = self.original_panel.copy()
+            x, y, w, h = self.content_box
+            cv2.rectangle(debug_img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            ax.imshow(cv2.cvtColor(debug_img, cv2.COLOR_BGR2RGB))
+            ax.set_title("Content Boundary")
+            ax.axis("off")
+
+        if self.refined_panel is not None:
+            ax = axes[2, 2]
+            ax.imshow(cv2.cvtColor(self.refined_panel, cv2.COLOR_BGR2RGB))
+            ax.set_title("Refined Panel")
+            ax.axis("off")
+
+        # Adjust layout
         plt.tight_layout()
         plt.show()
 
