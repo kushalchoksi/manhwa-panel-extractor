@@ -18,7 +18,7 @@ Scrolling through manhwa pages on your phone is a pain, there's just too much wh
    ```
 3. **Run** the main extractor on an image or directory
     ```bash
-    python manhwa-extractor.py jinwoo.jsp
+    python manhwa-extractor.py jinwoo.jpg
     ```
 4. **Extracts panels** in a folder of the image or directory name with `_output` appended 
 
