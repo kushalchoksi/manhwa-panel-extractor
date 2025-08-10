@@ -23,3 +23,7 @@ Scrolling through manhwa pages on your phone is a pain, there's just too much wh
 4. **Extracts panels** in a folder of the image or directory name with `_output` appended 
 
 There's a few other options to extract it in different ways if you want to play around with that. 
+
+## Potential Improvements
+
+- Have a way of doing automatic inpainting on leftover/partial speech bubbles
