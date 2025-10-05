@@ -22,7 +22,21 @@ Scrolling through manhwa pages on your phone is a pain, there's just too much wh
     ```
 4. **Extracts panels** in a folder of the image or directory name with `_output` appended 
 
-There's a few other options to extract it in different ways if you want to play around with that. 
+There's a few other options to extract it in different ways if you want to play around with that.
+
+## Web Interface
+
+You can also use the Gradio web interface if you're not good with CLI's:
+
+```bash
+python gradio_app.py
+```
+
+This launches a local web app at `http://localhost:7860` where you can:
+- Upload images through your browser
+- Adjust extraction settings with sliders
+- Preview extracted panels in a gallery
+- Download all panels as a ZIP file
 
 ## Potential Improvements
 
