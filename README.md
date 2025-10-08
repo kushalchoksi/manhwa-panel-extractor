@@ -4,6 +4,9 @@ Scrolling through manhwa pages on your phone is a pain, there's just too much wh
 
 ![image](https://github.com/user-attachments/assets/7d1e0004-89f8-45d2-8604-7da116c3d630)
 
+# Demo
+
+Try it out yourself here https://huggingface.co/spaces/kushalchoksi/manhwa-panel-extractor 
 
 ## What It Does
 - **Extracts Panels**: Slices manhwa pages into individual panels.
